@@ -4,12 +4,12 @@ import { CellProps, FilterProps, FilterValue, IdType, Row, TableInstance } from 
 
 import { Page } from './Page'
 import { Table } from './Table'
-import { PersonData, makeData } from './utils'
+import { makeData } from './utils'
 
 // This is a custom aggregator that
 // takes in an array of values and
 // returns the rounded median
-function roundedMedian(values: any[]) {
+function roundedMedian(values) {
   let min = values[0] || ''
   let max = values[0] || ''
 
@@ -21,7 +21,7 @@ function roundedMedian(values: any[]) {
   return Math.round((min + max) / 2)
 }
 
-function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filterValue: FilterValue) {
+function filterGreaterThan(rows, id, filterValue) {
   return rows.filter((row) => {
     const rowValue = row.values[id[0]]
     return rowValue >= filterValue
@@ -32,13 +32,13 @@ function filterGreaterThan(rows: Array<Row<any>>, id: Array<IdType<any>>, filter
 // when given the new filter value and returns true, the filter
 // will be automatically removed. Normally this is just an undefined
 // check, but here, we want to remove the filter if it's not a number
-filterGreaterThan.autoRemove = (val: any) => typeof val !== 'number'
+filterGreaterThan.autoRemove = (val) => typeof val !== 'number'
 
 function SelectColumnFilter({
   column: { filterValue, render, setFilter, preFilteredRows, id },
-}: FilterProps<PersonData>) {
+}) {
   const options = React.useMemo(() => {
-    const options = new Set<any>()
+    const options = new Set()
     preFilteredRows.forEach((row) => {
       options.add(row.values[id])
     })
@@ -64,7 +64,7 @@ function SelectColumnFilter({
   )
 }
 
-const getMinMax = (rows: Row<PersonData>[], id: IdType<PersonData>) => {
+const getMinMax = (rows, id) => {
   let min = rows.length ? rows[0].values[id] : 0
   let max = rows.length ? rows[0].values[id] : 0
   rows.forEach((row) => {
@@ -76,7 +76,7 @@ const getMinMax = (rows: Row<PersonData>[], id: IdType<PersonData>) => {
 
 function SliderColumnFilter({
   column: { render, filterValue, setFilter, preFilteredRows, id },
-}: FilterProps<PersonData>) {
+}) {
   const [min, max] = React.useMemo(() => getMinMax(preFilteredRows, id), [id, preFilteredRows])
 
   return (
@@ -129,7 +129,7 @@ const useActiveElement = () => {
 // ones that have values between the two
 function NumberRangeColumnFilter({
   column: { filterValue = [], render, preFilteredRows, setFilter, id },
-}: FilterProps<PersonData>) {
+}) {
   const [min, max] = React.useMemo(() => getMinMax(preFilteredRows, id), [id, preFilteredRows])
   const focusedElement = useActiveElement()
   const hasFocus = focusedElement && (focusedElement.id === `${id}_1` || focusedElement.id === `${id}_2`)
@@ -152,7 +152,7 @@ function NumberRangeColumnFilter({
           type='number'
           onChange={(e) => {
             const val = e.target.value
-            setFilter((old: any[] = []) => [val ? parseInt(val, 10) : undefined, old[1]])
+            setFilter((old = []) => [val ? parseInt(val, 10) : undefined, old[1]])
           }}
           placeholder={`Min (${min})`}
           style={{
@@ -167,7 +167,7 @@ function NumberRangeColumnFilter({
           type='number'
           onChange={(e) => {
             const val = e.target.value
-            setFilter((old: any[] = []) => [old[0], val ? parseInt(val, 10) : undefined])
+            setFilter((old = []) => [old[0], val ? parseInt(val, 10) : undefined])
           }}
           placeholder={`Max (${max})`}
           style={{
@@ -188,14 +188,14 @@ const columns = [
         Header: 'First Name',
         accessor: 'firstName',
         aggregate: 'count',
-        Aggregated: ({ cell: { value } }: CellProps<PersonData>) => `${value} Names`,
+        Aggregated: ({ cell: { value } }) => `${value} Names`,
       },
       {
         Header: 'Last Name',
         accessor: 'lastName',
         aggregate: 'uniqueCount',
         filter: 'fuzzyText',
-        Aggregated: ({ cell: { value } }: CellProps<PersonData>) => `${value} Unique Names`,
+        Aggregated: ({ cell: { value } }) => `${value} Unique Names`,
       },
     ],
   },
@@ -214,7 +214,7 @@ const columns = [
         disableGroupBy: true,
         defaultCanSort: false,
         disableSortBy: false,
-        Aggregated: ({ cell: { value } }: CellProps<PersonData>) => `${value} (avg)`,
+        Aggregated: ({ cell: { value } }) => `${value} (avg)`,
       },
       {
         Header: 'Visits',
@@ -225,7 +225,7 @@ const columns = [
         Filter: NumberRangeColumnFilter,
         filter: 'between',
         aggregate: 'sum',
-        Aggregated: ({ cell: { value } }: CellProps<PersonData>) => `${value} (total)`,
+        Aggregated: ({ cell: { value } }) => `${value} (total)`,
       },
       {
         Header: 'Status',
@@ -239,17 +239,17 @@ const columns = [
         Filter: SliderColumnFilter,
         filter: filterGreaterThan,
         aggregate: roundedMedian,
-        Aggregated: ({ cell: { value } }: CellProps<PersonData>) => `${value} (med)`,
+        Aggregated: ({ cell: { value } }) => `${value} (med)`,
       },
     ],
   },
 ] //.flatMap((c:any)=>c.columns) // remove comment to drop header groups
 
-const App: React.FC = () => {
-  const [data] = React.useState<PersonData[]>(() => makeData(100))
+const App = () => {
+  const [data] = React.useState(() => makeData(100))
 
   const dummy = useCallback(
-    (instance: TableInstance<PersonData>) => () => {
+    (instance) => () => {
       console.log(
         'Selected',
         instance.selectedFlatRows.map((v) => `'${v.original.firstName} ${v.original.lastName}'`).join(', ')
@@ -261,7 +261,7 @@ const App: React.FC = () => {
   return (
     <Page>
       <CssBaseline />
-      <Table<PersonData>
+      <Table
         name={'testTable'}
         columns={columns}
         data={data}

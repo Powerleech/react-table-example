@@ -1,15 +1,6 @@
 import namor from '@ggascoigne/namor'
 
-export type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  progress: number
-  status: string
-}
-
-const range = (len: number) => {
+const range = (len) => {
   const arr = []
   for (let i = 0; i < len; i++) {
     arr.push(i)
@@ -17,7 +8,7 @@ const range = (len: number) => {
   return arr
 }
 
-const newPerson = (): Person => {
+const newPerson = () => {
   const statusChance = Math.random()
   return {
     firstName: namor.generate({ words: 1, saltLength: 0 }),
@@ -29,12 +20,8 @@ const newPerson = (): Person => {
   }
 }
 
-export type PersonData = Person & {
-  subRows?: PersonData[]
-}
-
-export function makeData(...lens: number[]): PersonData[] {
-  const makeDataLevel = (depth = 0): PersonData[] => {
+export function makeData(...lens) {
+  const makeDataLevel = (depth = 0) => {
     const len = lens[depth]
     return range(len).map(() => ({
       ...newPerson(),

@@ -24,21 +24,15 @@ const useStyles = makeStyles(
   })
 )
 
-type ColumnHidePageProps<T extends Record<string, unknown>> = {
-  instance: TableInstance<T>
-  anchorEl?: Element
-  onClose: () => void
-  show: boolean
-}
 
 const id = 'popover-column-hide'
 
-export function ColumnHidePage<T extends Record<string, unknown>>({
+export function ColumnHidePage({
   instance,
   anchorEl,
   onClose,
   show,
-}: ColumnHidePageProps<T>): ReactElement | null {
+}) {
   const classes = useStyles({})
   const { allColumns, toggleHideColumn } = instance
   const hideableColumns = allColumns.filter((column) => !(column.id === '_selector'))

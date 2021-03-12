@@ -8,11 +8,10 @@ import classnames from 'classnames'
 import React, { MouseEvent, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react'
 import { TableInstance } from 'react-table'
 
-import { TableMouseEventHandler } from '../../types/react-table-config'
 import { ColumnHidePage } from './ColumnHidePage'
 import { FilterPage } from './FilterPage'
 
-export const useStyles = makeStyles((theme: Theme) =>
+export const useStyles = makeStyles((theme) =>
   createStyles({
     toolbar: {
       display: 'flex',
@@ -37,51 +36,34 @@ export const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-type InstanceActionButton<T extends Record<string, unknown>> = {
-  instance: TableInstance<T>
-  icon?: JSX.Element
-  onClick: TableMouseEventHandler
-  enabled?: (instance: TableInstance<T>) => boolean
-  label: string
-  variant?: 'right' | 'left'
-}
-
-type ActionButton = {
-  icon?: JSX.Element
-  onClick: MouseEventHandler
-  enabled?: boolean
-  label: string
-  variant?: 'right' | 'left'
-}
-
-export const InstanceLabeledActionButton = <T extends Record<string, unknown>>({
+export const InstanceLabeledActionButton = ({
   instance,
   icon,
   onClick,
   label,
   enabled = () => true,
-}: InstanceActionButton<T>): ReactElement => (
+}) => (
   <Button variant='contained' color='primary' onClick={onClick(instance)} disabled={!enabled(instance)}>
     {icon}
     {label}
   </Button>
 )
 
-export const LabeledActionButton = ({ icon, onClick, label, enabled = true }: ActionButton): ReactElement => (
+export const LabeledActionButton = ({ icon, onClick, label, enabled = true }) => (
   <Button variant='contained' color='primary' onClick={onClick} disabled={!enabled}>
     {icon}
     {label}
   </Button>
 )
 
-export const InstanceSmallIconActionButton = <T extends Record<string, unknown>>({
+export const InstanceSmallIconActionButton = ({
   instance,
   icon,
   onClick,
   label,
   enabled = () => true,
   variant,
-}: InstanceActionButton<T>): ReactElement => {
+}) => {
   const classes = useStyles({})
   return (
     <Tooltip title={label} aria-label={label}>
@@ -107,7 +89,7 @@ export const SmallIconActionButton = ({
   label,
   enabled = true,
   variant,
-}: ActionButton): ReactElement => {
+}) => {
   const classes = useStyles({})
   return (
     <Tooltip title={label} aria-label={label}>
@@ -127,28 +109,21 @@ export const SmallIconActionButton = ({
   )
 }
 
-type TableToolbarProps<T extends Record<string, unknown>> = {
-  instance: TableInstance<T>
-  onAdd?: TableMouseEventHandler
-  onDelete?: TableMouseEventHandler
-  onEdit?: TableMouseEventHandler
-}
-
-export function TableToolbar<T extends Record<string, unknown>>({
+export function TableToolbar({
   instance,
   onAdd,
   onDelete,
   onEdit,
-}: PropsWithChildren<TableToolbarProps<T>>): ReactElement | null {
+}){
   const { columns } = instance
   const classes = useStyles()
-  const [anchorEl, setAnchorEl] = useState<Element | undefined>(undefined)
+  const [anchorEl, setAnchorEl] = useState(undefined)
   const [columnsOpen, setColumnsOpen] = useState(false)
   const [filterOpen, setFilterOpen] = useState(false)
   const hideableColumns = columns.filter((column) => !(column.id === '_selector'))
 
   const handleColumnsClick = useCallback(
-    (event: MouseEvent) => {
+    (event) => {
       setAnchorEl(event.currentTarget)
       setColumnsOpen(true)
     },
@@ -156,7 +131,7 @@ export function TableToolbar<T extends Record<string, unknown>>({
   )
 
   const handleFilterClick = useCallback(
-    (event: MouseEvent) => {
+    (event) => {
       setAnchorEl(event.currentTarget)
       setFilterOpen(true)
     },
@@ -174,36 +149,36 @@ export function TableToolbar<T extends Record<string, unknown>>({
     <Toolbar className={classes.toolbar}>
       <div className={classes.leftButtons}>
         {onAdd && (
-          <InstanceSmallIconActionButton<T>
+          <InstanceSmallIconActionButton
             instance={instance}
             icon={<AddIcon />}
             onClick={onAdd}
             label='Add'
-            enabled={({ state }: TableInstance<T>) =>
+            enabled={({ state }) =>
               !state.selectedRowIds || Object.keys(state.selectedRowIds).length === 0
             }
             variant='left'
           />
         )}
         {onEdit && (
-          <InstanceSmallIconActionButton<T>
+          <InstanceSmallIconActionButton
             instance={instance}
             icon={<CreateIcon />}
             onClick={onEdit}
             label='Edit'
-            enabled={({ state }: TableInstance<T>) =>
+            enabled={({ state }) =>
               state.selectedRowIds && Object.keys(state.selectedRowIds).length === 1
             }
             variant='left'
           />
         )}
         {onDelete && (
-          <InstanceSmallIconActionButton<T>
+          <InstanceSmallIconActionButton
             instance={instance}
             icon={<DeleteIcon />}
             onClick={onDelete}
             label='Delete'
-            enabled={({ state }: TableInstance<T>) =>
+            enabled={({ state }) =>
               state.selectedRowIds && Object.keys(state.selectedRowIds).length > 0
             }
             variant='left'
@@ -211,8 +186,8 @@ export function TableToolbar<T extends Record<string, unknown>>({
         )}
       </div>
       <div className={classes.rightButtons}>
-        <ColumnHidePage<T> instance={instance} onClose={handleClose} show={columnsOpen} anchorEl={anchorEl} />
-        <FilterPage<T> instance={instance} onClose={handleClose} show={filterOpen} anchorEl={anchorEl} />
+        <ColumnHidePage instance={instance} onClose={handleClose} show={columnsOpen} anchorEl={anchorEl} />
+        <FilterPage instance={instance} onClose={handleClose} show={filterOpen} anchorEl={anchorEl} />
         {hideableColumns.length > 1 && (
           <SmallIconActionButton
             icon={<ViewColumnsIcon />}

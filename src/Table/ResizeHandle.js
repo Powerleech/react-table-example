@@ -4,11 +4,7 @@ import { ColumnInstance } from 'react-table'
 
 import { useStyles } from './TableStyles'
 
-export const ResizeHandle = <T extends Record<string, unknown>>({
-  column,
-}: {
-  column: ColumnInstance<T>
-}): ReactElement => {
+export const ResizeHandle = ({ column }) => {
   const classes = useStyles()
   return (
     <div

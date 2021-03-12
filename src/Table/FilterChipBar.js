@@ -24,11 +24,7 @@ const useStyles = makeStyles(
   })
 )
 
-type FilterChipBarProps<T extends Record<string, unknown>> = {
-  instance: TableInstance<T>
-}
-
-const getFilterValue = (column: ColumnInstance<any>, filterValue: FilterValue) => {
+const getFilterValue = (column, filterValue) => {
   switch (column.filter) {
     case 'between':
       const min = filterValue[0]
@@ -38,9 +34,9 @@ const getFilterValue = (column: ColumnInstance<any>, filterValue: FilterValue) =
   return filterValue
 }
 
-export function FilterChipBar<T extends Record<string, unknown>>({
+export function FilterChipBar({
   instance,
-}: FilterChipBarProps<T>): ReactElement | null {
+}) {
   const classes = useStyles({})
   const {
     allColumns,
@@ -48,8 +44,8 @@ export function FilterChipBar<T extends Record<string, unknown>>({
     state: { filters },
   } = instance
   const handleDelete = useCallback(
-    (id: string | number) => {
-      setFilter(id as IdType<T>, undefined)
+    (id) => {
+      setFilter(id, undefined)
     },
     [setFilter]
   )

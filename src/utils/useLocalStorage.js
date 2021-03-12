@@ -3,7 +3,7 @@
 import { useCallback, useState } from 'react'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function useLocalStorage(key: string, initialValue: any) {
+export function useLocalStorage(key, initialValue) {
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
   const [storedValue, setStoredValue] = useState(() => {
@@ -22,7 +22,7 @@ export function useLocalStorage(key: string, initialValue: any) {
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.
   const setValue = useCallback(
-    (value: any) => {
+    (value) => {
       try {
         // Save state
         setStoredValue(value)

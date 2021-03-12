@@ -1,7 +1,7 @@
-import { Checkbox, Theme, createStyles, makeStyles, styled } from '@material-ui/core'
+import { Checkbox, createStyles, makeStyles, styled } from '@material-ui/core'
 import React from 'react'
 
-export const useStyles = makeStyles((theme: Theme) =>
+export const useStyles = makeStyles((theme) =>
   createStyles({
     tableTable: {
       borderSpacing: 0,
@@ -125,7 +125,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-const areEqual = (prevProps: any, nextProps: any) =>
+const areEqual = (prevProps, nextProps) =>
   prevProps.checked === nextProps.checked && prevProps.indeterminate === nextProps.indeterminate
 
 export const HeaderCheckbox = React.memo(

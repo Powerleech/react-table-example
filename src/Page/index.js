@@ -1,10 +1,9 @@
-import { Theme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import createStyles from '@material-ui/core/styles/createStyles'
 import classNames from 'classnames'
 import React from 'react'
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     main: {
       background: '#FFFFFF',
@@ -19,11 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-type PageProps = {
-  className?: string
-}
-
-export const Page: React.FC<PageProps> = ({ children, className }) => {
+export const Page = ({ children, className }) => {
   const classes = useStyles()
   return <div className={classNames(classes.main, className)}>{children}</div>
 }

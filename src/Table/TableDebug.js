@@ -16,10 +16,7 @@ const useStyles = makeStyles(
   })
 )
 
-export const TableDebug: React.FC<{
-  enabled: boolean
-  instance: any
-}> = ({ enabled, instance }) => {
+export const TableDebug = ({ enabled, instance }) => {
   const [open, setOpen] = useState(false)
   const classes = useStyles()
 

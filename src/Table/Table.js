@@ -27,7 +27,7 @@ import {
   useTable,
 } from 'react-table'
 
-import { camelToWords, useDebounce, useLocalStorage } from '../utils'
+import { useDebounce, useLocalStorage } from '../utils'
 import { FilterChipBar } from './FilterChipBar'
 import { fuzzyTextFilter, numericTextFilter } from './filters'
 import { ResizeHandle } from './ResizeHandle'
@@ -37,26 +37,14 @@ import { HeaderCheckbox, RowCheckbox, useStyles } from './TableStyles'
 import { TableToolbar } from './TableToolbar'
 import { TooltipCell } from './TooltipCell'
 
-export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
-  name: string
-  onAdd?: (instance: TableInstance<T>) => MouseEventHandler
-  onDelete?: (instance: TableInstance<T>) => MouseEventHandler
-  onEdit?: (instance: TableInstance<T>) => MouseEventHandler
-  onClick?: (row: Row<T>) => void
-}
-
-const DefaultHeader: React.FC<HeaderProps<any>> = ({ column }) => (
-  <>{column.id.startsWith('_') ? null : camelToWords(column.id)}</>
-)
-
 // yes this is recursive, but the depth never exceeds three so it seems safe enough
-const findFirstColumn = <T extends Record<string, unknown>>(columns: Array<ColumnInstance<T>>): ColumnInstance<T> =>
+const findFirstColumn = (columns) =>
   columns[0].columns ? findFirstColumn(columns[0].columns) : columns[0]
 
-function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, column }: FilterProps<T>) {
+function DefaultColumnFilter({ columns, column }) {
   const { id, filterValue, setFilter, render } = column
   const [value, setValue] = React.useState(filterValue || '')
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event) => {
     setValue(event.target.value)
   }
   // ensure that reset loads the new value
@@ -81,7 +69,7 @@ function DefaultColumnFilter<T extends Record<string, unknown>>({ columns, colum
   )
 }
 
-const getStyles = (props: any, disableResizing = false, align = 'left') => [
+const getStyles = (props, disableResizing = false, align = 'left') => [
   props,
   {
     style: {
@@ -92,7 +80,7 @@ const getStyles = (props: any, disableResizing = false, align = 'left') => [
   },
 ]
 
-const selectionHook = (hooks: Hooks<any>) => {
+const selectionHook = (hooks) => {
   hooks.allColumns.push((columns) => [
     // Let's make a column for selection
     {
@@ -104,12 +92,12 @@ const selectionHook = (hooks: Hooks<any>) => {
       maxWidth: 45,
       // The header can use the table's getToggleAllRowsSelectedProps method
       // to render a checkbox
-      Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<any>) => (
+      Header: ({ getToggleAllRowsSelectedProps }) => (
         <HeaderCheckbox {...getToggleAllRowsSelectedProps()} />
       ),
       // The cell can use the individual row's getToggleRowSelectedProps method
       // to the render a checkbox
-      Cell: ({ row }: CellProps<any>) => <RowCheckbox {...row.getToggleRowSelectedProps()} />,
+      Cell: ({ row }) => <RowCheckbox {...row.getToggleRowSelectedProps()} />,
     },
     ...columns,
   ])
@@ -120,16 +108,15 @@ const selectionHook = (hooks: Hooks<any>) => {
   })
 }
 
-const headerProps = <T extends Record<string, unknown>>(props: any, { column }: Meta<T, { column: HeaderGroup<T> }>) =>
+const headerProps = (props, { column }) =>
   getStyles(props, column && column.disableResizing, column && column.align)
 
-const cellProps = <T extends Record<string, unknown>>(props: any, { cell }: Meta<T, { cell: Cell<T> }>) =>
+const cellProps = (props, { cell }) =>
   getStyles(props, cell.column && cell.column.disableResizing, cell.column && cell.column.align)
 
 const defaultColumn = {
   Filter: DefaultColumnFilter,
   Cell: TooltipCell,
-  Header: DefaultHeader,
   // When using the useFlexLayout:
   minWidth: 30, // minWidth is only used as a limit for resizing
   width: 150, // width is used for both the flex-basis and flex-grow
@@ -154,12 +141,12 @@ const filterTypes = {
   numeric: numericTextFilter,
 }
 
-export function Table<T extends Record<string, unknown>>(props: PropsWithChildren<TableProperties<T>>): ReactElement {
+export function Table(props) {
   const { name, columns, onAdd, onDelete, onEdit, onClick } = props
   const classes = useStyles()
 
   const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {})
-  const instance = useTable<T>(
+  const instance = useTable(
     {
       ...props,
       columns,
@@ -185,14 +172,14 @@ export function Table<T extends Record<string, unknown>>(props: PropsWithChildre
     setInitialState(val)
   }, [setInitialState, debouncedState])
 
-  const cellClickHandler = (cell: Cell<T>) => () => {
+  const cellClickHandler = (cell) => () => {
     onClick && cell.column.id !== '_selector' && onClick(cell.row)
   }
 
   return (
-    <>
+    <div>
       <TableToolbar instance={instance} {...{ onAdd, onDelete, onEdit }} />
-      <FilterChipBar<T> instance={instance} />
+      <FilterChipBar instance={instance} />
       <div className={classes.tableTable} {...getTableProps()}>
         <div>
           {headerGroups.map((headerGroup) => (
@@ -200,7 +187,7 @@ export function Table<T extends Record<string, unknown>>(props: PropsWithChildre
               {headerGroup.headers.map((column) => {
                 const style = {
                   textAlign: column.align ? column.align : 'left ',
-                } as CSSProperties
+                }
                 return (
                   <div {...column.getHeaderProps(headerProps)} className={classes.tableHeadCell}>
                     {column.canGroupBy && (
@@ -273,8 +260,8 @@ export function Table<T extends Record<string, unknown>>(props: PropsWithChildre
           })}
         </div>
       </div>
-      <TablePagination<T> instance={instance} />
+      <TablePagination instance={instance} />
       <TableDebug enabled instance={instance} />
-    </>
+    </div>
   )
 }

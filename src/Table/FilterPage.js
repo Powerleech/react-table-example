@@ -37,24 +37,17 @@ const useStyles = makeStyles(
   })
 )
 
-type FilterPageProps<T extends Record<string, unknown>> = {
-  instance: TableInstance<T>
-  anchorEl?: Element
-  onClose: () => void
-  show: boolean
-}
-
-export function FilterPage<T extends Record<string, unknown>>({
+export function FilterPage({
   instance,
   anchorEl,
   onClose,
   show,
-}: FilterPageProps<T>): ReactElement {
+}) {
   const classes = useStyles({})
   const { allColumns, setAllFilters } = instance
 
   const onSubmit = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
+    (e) => {
       e.preventDefault()
       onClose()
     },
