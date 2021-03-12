@@ -5,8 +5,8 @@ import DeleteIcon from '@material-ui/icons/DeleteOutline'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import ViewColumnsIcon from '@material-ui/icons/ViewColumn'
 import classnames from 'classnames'
-import React, { MouseEvent, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react'
-import { TableInstance } from 'react-table'
+import React, { useCallback, useState } from 'react'
+
 
 import { ColumnHidePage } from './ColumnHidePage'
 import { FilterPage } from './FilterPage'
