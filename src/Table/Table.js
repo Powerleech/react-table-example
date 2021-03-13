@@ -163,6 +163,7 @@ export function Table(props) {
 
   const cellClickHandler = (cell) => () => {
     onClick && cell.column.id !== '_selector' && onClick(cell.row)
+    console.log(cell);
   }
 
   return (

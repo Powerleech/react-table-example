@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ggascoigne/namor": "^2.0.2",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@welldone-software/why-did-you-render": "^6.1.0",
@@ -39,8 +38,7 @@
     "lint-staged": "^10.5.4",
     "prettier": "^2.2.1",
     "prettier-plugin-import-sort": "^0.0.6",
-    "react-scripts": "4.0.3",
-    "typesync": "^0.8.0"
+    "react-scripts": "4.0.3"
   },
   "resolutions": {},
   "scripts": {
