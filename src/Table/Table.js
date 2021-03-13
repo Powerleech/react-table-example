@@ -179,15 +179,6 @@ export function Table(props) {
                 }
                 return (
                   <div {...column.getHeaderProps(headerProps)} className={classes.tableHeadCell}>
-                    {column.canGroupBy && (
-                      <TableSortLabel
-                        active
-                        direction={column.isGrouped ? 'desc' : 'asc'}
-                        IconComponent={KeyboardArrowRight}
-                        {...column.getGroupByToggleProps()}
-                        className={classes.headerIcon}
-                      />
-                    )}
                     {column.canSort ? (
                       <TableSortLabel
                         active={column.isSorted}

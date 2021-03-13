@@ -179,60 +179,10 @@ function NumberRangeColumnFilter({
   )
 }
 
-const columns = [
-  { Header: "Faktura", accessor: "InvoiceNumber", id: "invoiceNumber", filter: 'fuzzyText', },
-  { Header: "BookingId", accessor: "BookingId", id: "bookingId", filter: 'fuzzyText', },
-  { 
-    Header: "Status", 
-    accessor: "OrderStatus",
-    id: "orderStatus",
-    Filter: SelectColumnFilter,
-    filter: 'includes' 
-  },
-  { 
-    Header: "Massør", 
-    accessor: "Alias",
-    id: "alias",
-    Filter: SelectColumnFilter,
-    filter: 'includes'  
-  },
-  { 
-    Header: "Behandlingstype", 
-    accessor: "STypeName",
-    id: "sTypeName",
-    Filter: SelectColumnFilter,
-    filter: 'includes'  
-  },
-  { Header: "Behandlingsdato", accessor: "ServiceDate", id: "serviceDate" },
-  { Header: "Navn", accessor: "Navn", id: "navn", filter: 'fuzzyText' },
-  { Header: "Tlf", accessor: "CPhone", id: "cPhone", filter: 'fuzzyText' },
-  { Header: "Email", accessor: "CEmail", id: "cEmail", filter: 'fuzzyText' },
-  { Header: "Adresse", accessor: "OrderAddress", id: "orderAddress", filter: 'fuzzyText' },
-  { Header: "Postnr", accessor: "ZipCode", id: "zipCode", filter: 'fuzzyText' },
-  { Header: "Area", accessor: "AreaName", id: "areaName", filter: 'fuzzyText' },
-  { Header: "Klippe-/Gavekode", accessor: "GiftCardID", id: "giftCardID", filter: 'fuzzyText' },
-  { Header: "Værdikort", accessor: "CreditCode", id: "creditCode", filter: 'fuzzyText' },
-  { Header: "Bookingdato", accessor: "BookingDate", id: "bookingDate", filter: 'fuzzyText' },
-  { Header: "Paymentmethod", accessor: "Paymentmethod", id: "paymentmethod", Filter: SelectColumnFilter, filter: 'includes' },
-  { Header: "Promokode", accessor: "Promocode", id: "promocode", filter: 'fuzzyText' },
-  { 
-    Header: "Total", 
-    accessor: "Total",
-    id: "total",
-    width: 50,
-    minWidth: 50,
-    align: 'right',
-    Filter: NumberRangeColumnFilter,
-    filter: 'between',
-  },
-  { Header: "RC_RR", accessor: "ReturningCustomer", id: "returningCustomer", Filter: SelectColumnFilter, filter: 'includes' },
-  { Header: "RC_Th", accessor: "RCForTherapist", id: "rCForTherapist", Filter: SelectColumnFilter, filter: 'includes' },
-];
-
 const App = () => {
   // const [orderstatus, setOrderstatus] = useState("All");
   const [data, setData] = useState([]); //table data
-  //const dataMemo = useMemo(() => data, [data]);
+  const dataMemo = useMemo(() => data, [data]);
 
   useEffect(() => {
     const getData = async () => {
@@ -244,6 +194,56 @@ const App = () => {
     };
     getData();
   }, []);
+
+  const columns = useMemo(() => [
+    { Header: "Faktura", accessor: "InvoiceNumber", id: "invoiceNumber", filter: 'fuzzyText', },
+    { Header: "BookingId", accessor: "BookingId", id: "bookingId", filter: 'fuzzyText', },
+    { 
+      Header: "Status", 
+      accessor: "OrderStatus",
+      id: "orderStatus",
+      Filter: SelectColumnFilter,
+      filter: 'includes' 
+    },
+    { 
+      Header: "Massør", 
+      accessor: "Alias",
+      id: "alias",
+      Filter: SelectColumnFilter,
+      filter: 'includes'  
+    },
+    { 
+      Header: "Behandlingstype", 
+      accessor: "STypeName",
+      id: "sTypeName",
+      Filter: SelectColumnFilter,
+      filter: 'includes'  
+    },
+    { Header: "Behandlingsdato", accessor: "ServiceDate", id: "serviceDate" },
+    { Header: "Navn", accessor: "Navn", id: "navn", filter: 'fuzzyText' },
+    { Header: "Tlf", accessor: "CPhone", id: "cPhone", filter: 'fuzzyText' },
+    { Header: "Email", accessor: "CEmail", id: "cEmail", filter: 'fuzzyText' },
+    { Header: "Adresse", accessor: "OrderAddress", id: "orderAddress", filter: 'fuzzyText' },
+    { Header: "Postnr", accessor: "ZipCode", id: "zipCode", filter: 'fuzzyText' },
+    { Header: "Area", accessor: "AreaName", id: "areaName", filter: 'fuzzyText' },
+    { Header: "Klippe-/Gavekode", accessor: "GiftCardID", id: "giftCardID", filter: 'fuzzyText' },
+    { Header: "Værdikort", accessor: "CreditCode", id: "creditCode", filter: 'fuzzyText' },
+    { Header: "Bookingdato", accessor: "BookingDate", id: "bookingDate", filter: 'fuzzyText' },
+    { Header: "Paymentmethod", accessor: "Paymentmethod", id: "paymentmethod", Filter: SelectColumnFilter, filter: 'includes' },
+    { Header: "Promokode", accessor: "Promocode", id: "promocode", filter: 'fuzzyText' },
+    { 
+      Header: "Total", 
+      accessor: "Total",
+      id: "total",
+      width: 50,
+      minWidth: 50,
+      align: 'right',
+      Filter: NumberRangeColumnFilter,
+      filter: 'between',
+    },
+    { Header: "RC_RR", accessor: "ReturningCustomer", id: "returningCustomer", Filter: SelectColumnFilter, filter: 'includes' },
+    { Header: "RC_Th", accessor: "RCForTherapist", id: "rCForTherapist", Filter: SelectColumnFilter, filter: 'includes' },
+  ], []);
 
   return (
     <Page>
