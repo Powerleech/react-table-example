@@ -1,5 +1,3 @@
-import { FilterValue, IdType, Row } from 'react-table'
-
 const regex = /([=<>!]*)\s*((?:[0-9].?[0-9]*)+)/
 
 function parseValue(filterValue) {

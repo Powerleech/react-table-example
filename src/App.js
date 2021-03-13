@@ -1,10 +1,9 @@
 import { Button, CssBaseline, InputLabel, MenuItem, TextField } from '@material-ui/core'
-import React, { useCallback } from 'react'
-import { CellProps, FilterProps, FilterValue, IdType, Row, TableInstance } from 'react-table'
+import React, { useEffect, useState, useMemo } from 'react'
 
 import { Page } from './Page'
 import { Table } from './Table'
-import { makeData } from './utils'
+import AuthService from './auth.service'
 
 // This is a custom aggregator that
 // takes in an array of values and
@@ -74,38 +73,38 @@ const getMinMax = (rows, id) => {
   return [min, max]
 }
 
-function SliderColumnFilter({
-  column: { render, filterValue, setFilter, preFilteredRows, id },
-}) {
-  const [min, max] = React.useMemo(() => getMinMax(preFilteredRows, id), [id, preFilteredRows])
+// function SliderColumnFilter({
+//   column: { render, filterValue, setFilter, preFilteredRows, id },
+// }) {
+//   const [min, max] = React.useMemo(() => getMinMax(preFilteredRows, id), [id, preFilteredRows])
 
-  return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-      }}
-    >
-      <TextField
-        name={id}
-        label={render('Header')}
-        type='range'
-        inputProps={{
-          min,
-          max,
-        }}
-        value={filterValue || min}
-        onChange={(e) => {
-          setFilter(parseInt(e.target.value, 10))
-        }}
-      />
-      <Button variant='outlined' style={{ width: 60, height: 36 }} onClick={() => setFilter(undefined)}>
-        Off
-      </Button>
-    </div>
-  )
-}
+//   return (
+//     <div
+//       style={{
+//         display: 'flex',
+//         justifyContent: 'space-between',
+//         alignItems: 'baseline',
+//       }}
+//     >
+//       <TextField
+//         name={id}
+//         label={render('Header')}
+//         type='range'
+//         inputProps={{
+//           min,
+//           max,
+//         }}
+//         value={filterValue || min}
+//         onChange={(e) => {
+//           setFilter(parseInt(e.target.value, 10))
+//         }}
+//       />
+//       <Button variant='outlined' style={{ width: 60, height: 36 }} onClick={() => setFilter(undefined)}>
+//         Off
+//       </Button>
+//     </div>
+//   )
+// }
 
 const useActiveElement = () => {
   const [active, setActive] = React.useState(document.activeElement)
@@ -181,93 +180,78 @@ function NumberRangeColumnFilter({
 }
 
 const columns = [
-  {
-    Header: 'Name',
-    columns: [
-      {
-        Header: 'First Name',
-        accessor: 'firstName',
-        aggregate: 'count',
-        Aggregated: ({ cell: { value } }) => `${value} Names`,
-      },
-      {
-        Header: 'Last Name',
-        accessor: 'lastName',
-        aggregate: 'uniqueCount',
-        filter: 'fuzzyText',
-        Aggregated: ({ cell: { value } }) => `${value} Unique Names`,
-      },
-    ],
+  { Header: "Faktura", accessor: "InvoiceNumber", id: "invoiceNumber", filter: 'fuzzyText', },
+  '{ Header: "BookingId", accessor: "BookingId", id: "bookingId", filter: 'fuzzyText', },
+  { 
+    Header: "Status", 
+    accessor: "OrderStatus",
+    id: "orderStatus",
+    Filter: SelectColumnFilter,
+    filter: 'includes' 
   },
-  {
-    Header: 'Info',
-    columns: [
-      {
-        Header: 'Age',
-        accessor: 'age',
-        width: 50,
-        minWidth: 50,
-        align: 'right',
-        Filter: SliderColumnFilter,
-        filter: 'equals',
-        aggregate: 'average',
-        disableGroupBy: true,
-        defaultCanSort: false,
-        disableSortBy: false,
-        Aggregated: ({ cell: { value } }) => `${value} (avg)`,
-      },
-      {
-        Header: 'Visits',
-        accessor: 'visits',
-        width: 50,
-        minWidth: 50,
-        align: 'right',
-        Filter: NumberRangeColumnFilter,
-        filter: 'between',
-        aggregate: 'sum',
-        Aggregated: ({ cell: { value } }) => `${value} (total)`,
-      },
-      {
-        Header: 'Status',
-        accessor: 'status',
-        Filter: SelectColumnFilter,
-        filter: 'includes',
-      },
-      {
-        Header: 'Profile Progress',
-        accessor: 'progress',
-        Filter: SliderColumnFilter,
-        filter: filterGreaterThan,
-        aggregate: roundedMedian,
-        Aggregated: ({ cell: { value } }) => `${value} (med)`,
-      },
-    ],
+  { 
+    Header: "Massør", 
+    accessor: "Alias",
+    id: "alias",
+    Filter: SelectColumnFilter,
+    filter: 'includes'  
   },
-] //.flatMap((c:any)=>c.columns) // remove comment to drop header groups
+  { 
+    Header: "Behandlingstype", 
+    accessor: "STypeName",
+    id: "sTypeName",
+    Filter: SelectColumnFilter,
+    filter: 'includes'  
+  },
+  { Header: "Behandlingsdato", accessor: "ServiceDate", id: "serviceDate" },
+  { Header: "Navn", accessor: "Navn", id: "navn", filter: 'fuzzyText' },
+  { Header: "Tlf", accessor: "CPhone", id: "cPhone", filter: 'fuzzyText' },
+  { Header: "Email", accessor: "CEmail", id: "cEmail", filter: 'fuzzyText' },
+  { Header: "Adresse", accessor: "OrderAddress", id: "orderAddress", filter: 'fuzzyText' },
+  { Header: "Postnr", accessor: "ZipCode", id: "zipCode", filter: 'fuzzyText' },
+  { Header: "Area", accessor: "AreaName", id: "areaName", filter: 'fuzzyText' },
+  { Header: "Klippe-/Gavekode", accessor: "GiftCardID", id: "giftCardID", filter: 'fuzzyText' },
+  { Header: "Værdikort", accessor: "CreditCode", id: "creditCode", filter: 'fuzzyText' },
+  { Header: "Bookingdato", accessor: "BookingDate", id: "bookingDate", filter: 'fuzzyText' },
+  { Header: "Paymentmethod", accessor: "Paymentmethod", id: "paymentmethod", Filter: SelectColumnFilter, filter: 'includes' },
+  { Header: "Promokode", accessor: "Promocode", id: "promocode", filter: 'fuzzyText' },
+  { 
+    Header: "Total", 
+    accessor: "Total",
+    id: "total",
+    width: 50,
+    minWidth: 50,
+    align: 'right',
+    Filter: NumberRangeColumnFilter,
+    filter: 'between',
+  },
+  { Header: "RC_RR", accessor: "ReturningCustomer", id: "returningCustomer", Filter: SelectColumnFilter, filter: 'includes' },
+  { Header: "RC_Th", accessor: "RCForTherapist", id: "rCForTherapist", Filter: SelectColumnFilter, filter: 'includes' },'
+];
 
 const App = () => {
-  const [data] = React.useState(() => makeData(100))
+  // const [orderstatus, setOrderstatus] = useState("All");
+  const [data, setData] = useState([]); //table data
+  //const dataMemo = useMemo(() => data, [data]);
 
-  const dummy = useCallback(
-    (instance) => () => {
-      console.log(
-        'Selected',
-        instance.selectedFlatRows.map((v) => `'${v.original.firstName} ${v.original.lastName}'`).join(', ')
-      )
-    },
-    []
-  )
+  useEffect(() => {
+    const getData = async () => {
+      const homeData = await AuthService.fetch(
+        `${AuthService.API_URL}/ui/homeview`
+      );
+      setData(homeData.data);
+      console.log(homeData.data);
+    };
+    getData();
+  }, []);
 
   return (
     <Page>
       <CssBaseline />
       <Table
-        name={'testTable'}
+        name={'RaskRask - System'}
         columns={columns}
         data={data}
-        onAdd={dummy}
-        onEdit={dummy}
-        onDelete={dummy}
       />
     </Page>
   )
