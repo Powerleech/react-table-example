@@ -181,7 +181,7 @@ function NumberRangeColumnFilter({
 
 const columns = [
   { Header: "Faktura", accessor: "InvoiceNumber", id: "invoiceNumber", filter: 'fuzzyText', },
-  '{ Header: "BookingId", accessor: "BookingId", id: "bookingId", filter: 'fuzzyText', },
+  { Header: "BookingId", accessor: "BookingId", id: "bookingId", filter: 'fuzzyText', },
   { 
     Header: "Status", 
     accessor: "OrderStatus",
@@ -226,7 +226,7 @@ const columns = [
     filter: 'between',
   },
   { Header: "RC_RR", accessor: "ReturningCustomer", id: "returningCustomer", Filter: SelectColumnFilter, filter: 'includes' },
-  { Header: "RC_Th", accessor: "RCForTherapist", id: "rCForTherapist", Filter: SelectColumnFilter, filter: 'includes' },'
+  { Header: "RC_Th", accessor: "RCForTherapist", id: "rCForTherapist", Filter: SelectColumnFilter, filter: 'includes' },
 ];
 
 const App = () => {
