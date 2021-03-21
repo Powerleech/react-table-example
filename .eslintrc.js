@@ -1,8 +1,6 @@
 module.exports = {
   extends: [
     'react-app',
-    // enable typescript support
-    'plugin:@typescript-eslint/recommended',
     // now disable all of the rules that are in conflict with prettier
     'prettier'
     // note that we don't add the prettier rules, they add noise to the IDE
